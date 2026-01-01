@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAYTI Pro - مدير التجارة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+        body { font-family: 'Tajawal', sans-serif; background: #0f172a; color: #f8fafc; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; }
+        .gradient-text { background: linear-gradient(90deg, #3b82f6, #2dd4bf); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .action-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .action-btn:active { transform: scale(0.95); }
+    </style>
+</head>
+<body class="min-h-screen pb-20">
+    <div class="max-w-md mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold gradient-text mb-2">BAYTI</h1>
+            <div class="flex justify-center items-center gap-2 text-gray-400">
+                <i class="fas fa-store"></i>
+                <span>مدير تجارة الطحين</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="glass-card p-4 text-center">
+                <p class="text-gray-400 text-xs mb-1">الرصيد الحالي</p>
+                <p id="total-debt" class="text-xl font-bold text-blue-400">5,000.00 MAD</p>
+            </div>
+            <div class="glass-card p-4 text-center">
+                <p class="text-gray-400 text-xs mb-1">المخزون (Kg)</p>
+                <p class="text-xl font-bold text-teal-400">1,250</p>
+            </div>
+        </div>
+
+        <div class="glass-card p-6 mb-6">
+            <h2 class="flex items-center gap-2 text-lg font-bold mb-4">
+                <i class="fas fa-undo text-blue-400"></i>
+                <span>إرجاع سلع (RETOUR)</span>
+            </h2>
+            <div class="space-y-4">
+                <div class="relative">
+                    <input type="number" id="kg-input" placeholder="الكمية بالـ Kg" 
+                        class="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+                <button onclick="handleReturn()" class="action-btn w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-900/20">
+                    حساب الخصم وتحديث الحساب
+                </button>
+            </div>
+        </div>
+
+        <div class="glass-card overflow-hidden">
+            <div class="p-4 border-b border-slate-800 bg-slate-800/30">
+                <h3 class="font-bold">📋 قائمة السلع</h3>
+            </div>
+            <div class="divide-y divide-slate-800">
+                <div class="p-4 flex justify-between items-center hover:bg-slate-800/20 transition-colors">
+                    <div>
+                        <p class="font-medium text-sm">دقيق ممتاز</p>
+                        <p class="text-xs text-gray-500">الثمن: 5.50 MAD</p>
+                    </div>
+                    <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-xs">800 Kg</span>
+                </div>
+                <div class="p-4 flex justify-between items-center hover:bg-slate-800/20 transition-colors">
+                    <div>
+                        <p class="font-medium text-sm">نخالة</p>
+                        <p class="text-xs text-gray-500">الثمن: 3.20 MAD</p>
+                    </div>
+                    <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-xs">450 Kg</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentDebt = 5000.00;
+        const unitPrice = 5.50;
+
+        function handleReturn() {
+            const kg = parseFloat(document.getElementById('kg-input').value);
+            if (!kg || kg <= 0) {
+                alert("المرجو إدخال كمية صحيحة");
+                return;
+            }
+
+            const refund = kg * unitPrice;
+            // Logic Fix: Never Negative
+            currentDebt = Math.max(0, currentDebt - refund);
+            
+            document.getElementById('total-debt').innerText = currentDebt.toLocaleString('en-US', {minimumFractionDigits: 2}) + " MAD";
+            document.getElementById('kg-input').value = '';
+            
+            // Success Animation/Alert
+            alert("تم إرجاع " + kg + " Kg بنجاح. قيمة الخصم: " + refund.toFixed(2) + " MAD");
+        }
+    </script>
+</body>
+</html>
